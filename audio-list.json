@@ -1,4 +1,17 @@
-[
-  { "file": "yoshi.wav", "label": "よし" },
-  { "file": "ittyau.wav", "label": "いっちゃうよ" }
+﻿[
+{"file":"dou.wav","label":"どう"},
+{"file":"fukidashi.wav","label":"ぶふぉ"},
+{"file":"gomenyurusite.wav","label":"ごめんゆるして"},
+{"file":"himei.wav","label":"悲鳴(音量注意)"},
+{"file":"hiu.wav","label":"ひぅ"},
+{"file":"ikerutokomade.wav","label":"行けるとこまで"},
+{"file":"ikesou.wav","label":"イケそう"},
+{"file":"iku.wav","label":"イク"},
+{"file":"ittyaimasuka.wav","label":"行っちゃいますか"},
+{"file":"ittyau.wav","label":"イッチャう"},
+{"file":"madaaru.wav","label":"まだある"},
+{"file":"maitta.wav","label":"参った"},
+{"file":"yaba-i.wav","label":"やばーい"},
+{"file":"yoshi.wav","label":"よし"},
+{"file":"yurushitepyon.wav","label":"ゆるしてぴょん"}
 ]
