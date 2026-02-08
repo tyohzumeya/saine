@@ -2,7 +2,7 @@ const container = document.getElementById('button-container');
 let currentAudio = null; // 再生中の音声を記録
  
 // JSON読み込み
-fetch("../audio-list.json")
+fetch("/saine/audio-list.json")
   .then(response => response.json())
   .then(list => {
     list.forEach((item, index) => {
