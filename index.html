@@ -3,13 +3,43 @@
 <head>
   <meta charset="UTF-8">
   <title>Hello saine World</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 30px;
+      background-color: #f0f0f0;
+      text-align: center;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      padding: 12px 24px;
+      font-size: 16px;
+      margin: 10px;
+      cursor: pointer;
+      border: none;
+      background-color: #4CAF50;
+      color: white;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
+
   <h1>Hello saine World</h1>
 
-  <audio controls>
-    <source src="yoshi.wav" type="audio/wav">
-    お使いのブラウザはaudioタグに対応していません
-  </audio>
+  <!-- ボタン -->
+  <button onclick="document.getElementById('audio1').play()">
+    sample
+  </button>
+
+  <!-- 非表示のオーディオ -->
+  <audio id="audio1" src="yoshi.wav"></audio>
+
 </body>
 </html>
