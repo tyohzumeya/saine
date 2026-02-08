@@ -27,7 +27,7 @@
 <script>
   const container = document.getElementById('button-container');
 
-  // JSON読み込み
+  // JSONを読み込む
   fetch("audio-list.json")
     .then(response => response.json())
     .then(list => {
@@ -36,7 +36,7 @@
         btn.textContent = item.label; // 日本語ラベル
         const audio = document.createElement('audio');
         audio.id = "audio" + index;
-        audio.src = item.file; // WAV ファイル
+        audio.src = "audio/" + item.file; // audioフォルダ内のWAV
         btn.onclick = () => audio.play();
         container.appendChild(btn);
         container.appendChild(audio);
