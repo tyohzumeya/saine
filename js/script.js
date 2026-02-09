@@ -3,7 +3,10 @@ let currentAudio = null;
 let isSecretMode = false;
 
 // 効果音
-const unlockSE = new Audio("unlock.mp3");
+const SE = {
+  unlock: new Audio("unlock.mp3"),
+  rollback: new Audio("rollback.mp3")
+};
 
 /* --------------------
    ボタン生成処理
@@ -66,13 +69,18 @@ window.addEventListener("keydown", (e) => {
     inputKeys.shift();
   }
 
-  if (
-    inputKeys.join(",") === KONAMI.join(",") &&
-    !isSecretMode
-  ) {
-    activateSecretMode();
+  if ( inputKeys.join(",") === KONAMI.join(",")) {
+    toggleSecretMode();
   }
 });
+
+function toggleSecretMode() {
+  if (isSecretMode) {
+    deactivateSecretMode();
+  } else {
+    activateSecretMode();
+  }
+}
 
 /* --------------------
    シークレット解禁
@@ -81,12 +89,32 @@ function activateSecretMode() {
   isSecretMode = true;
 
   // 効果音
-  unlockSE.currentTime = 0;
-  unlockSE.play();
+  SE.unlock.currentTime = 0;
+  SE.unlock.play();
 
   // 演出
   container.classList.add("secret");
 
   // 隠し音源に切り替え
   loadAudioList("/saine/exaudio-list.json", "exaudio");
+  
+  // タイトルを変更
+  document.getElementById("title").textContent = "Hello Hentai Saine World!";
+}
+
+function deactivateSecretMode() {
+  isSecretMode = false;
+
+  // 効果音
+  SE.rollback.currentTime = 0;
+  SE.rollback.play();
+
+  // ボタン戻す
+  loadAudioList("/saine/audio-list.json", "audio");
+
+  // 見た目戻す
+  container.classList.remove("secret");
+  
+  // タイトルを変更
+  document.getElementById("title").textContent = "Hello Saine World!";
 }
