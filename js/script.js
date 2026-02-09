@@ -1,31 +1,92 @@
-const container = document.getElementById('button-container');
-let currentAudio = null; // 再生中の音声を記録
- 
-// JSON読み込み
-fetch("/saine/audio-list.json")
-  .then(response => response.json())
-  .then(list => {
-    list.forEach((item, index) => {
-      const btn = document.createElement('button');
-      btn.textContent = item.label;
+const container = document.getElementById("button-container");
+let currentAudio = null;
+let isSecretMode = false;
 
-      const audio = document.createElement('audio');
-      audio.id = "audio" + index;
-      audio.src = "audio/" + item.file;
+// 効果音
+const unlockSE = new Audio("unlock.mp3");
 
-      btn.onclick = () => {
-        // 前回の音声を停止
-        if (currentAudio && !currentAudio.paused) {
-          currentAudio.pause();
-          currentAudio.currentTime = 0;
-        }
-        // 今回の音声を再生
-        audio.play();
-        currentAudio = audio;
-      };
+/* --------------------
+   ボタン生成処理
+-------------------- */
+function loadAudioList(jsonPath, audioDir) {
+  container.innerHTML = "";
+  currentAudio = null;
 
-      container.appendChild(btn);
-      container.appendChild(audio);
-    });
-  })
-  .catch(err => console.error("JSON読み込みエラー:", err));
+  fetch(jsonPath)
+    .then(response => response.json())
+    .then(list => {
+      list.forEach((item, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = item.label;
+
+        const audio = document.createElement("audio");
+        audio.src = `${audioDir}/${item.file}`;
+
+        btn.onclick = () => {
+          if (currentAudio && !currentAudio.paused) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+          }
+          audio.play();
+          currentAudio = audio;
+        };
+
+        container.appendChild(btn);
+        container.appendChild(audio);
+      });
+    })
+    .catch(err => console.error("JSON読み込みエラー:", err));
+}
+
+// 初期読み込み（通常）
+loadAudioList("/saine/audio-list.json", "audio");
+
+/* --------------------
+   コナミコマンド
+-------------------- */
+const KONAMI = [
+  "arrowup",
+  "arrowup",
+  "arrowdown",
+  "arrowdown",
+  "arrowleft",
+  "arrowright",
+  "arrowleft",
+  "arrowright",
+  "b",
+  "a"
+];
+
+let inputKeys = [];
+
+window.addEventListener("keydown", (e) => {
+  inputKeys.push(e.key.toLowerCase());
+
+  if (inputKeys.length > KONAMI.length) {
+    inputKeys.shift();
+  }
+
+  if (
+    inputKeys.join(",") === KONAMI.join(",") &&
+    !isSecretMode
+  ) {
+    activateSecretMode();
+  }
+});
+
+/* --------------------
+   シークレット解禁
+-------------------- */
+function activateSecretMode() {
+  isSecretMode = true;
+
+  // 効果音
+  unlockSE.currentTime = 0;
+  unlockSE.play();
+
+  // 演出
+  container.classList.add("secret");
+
+  // 隠し音源に切り替え
+  loadAudioList("/saine/exaudio-list.json", "exaudio");
+}

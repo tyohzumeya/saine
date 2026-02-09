@@ -12,3 +12,12 @@ button {
 }
 button:hover { background-color: #ddd; }
  
+.audio-buttons.secret {
+  animation: unlockFlash 0.4s ease-in-out 2;
+}
+
+@keyframes unlockFlash {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.5); }
+  100% { filter: brightness(1); }
+}
