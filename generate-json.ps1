@@ -1,105 +1,71 @@
 ﻿Set-Location -Path $PSScriptRoot
 
-$audioFolder = ".\audio"
-$jsonFile = Join-Path $PSScriptRoot "audio-list.json"
+function Update-AudioJson {
+    param(
+        [string]$FolderPath,       # 音声フォルダ
+        [string]$JsonPath          # 出力 JSON
+    )
 
-# audioフォルダがあるか確認
-if (!(Test-Path $audioFolder)) {
-    Write-Host "audio フォルダが見つかりません: $audioFolder"
-    exit
-}
+    # フォルダ存在確認
+    if (!(Test-Path $FolderPath)) {
+        Write-Host "フォルダが見つかりません: $FolderPath"
+        return
+    }
 
-# WAVファイル取得
-$files = Get-ChildItem $audioFolder -Filter *.wav
-if ($files.Count -eq 0) {
-    Write-Host "audio フォルダに WAV ファイルがありません"
-    exit
-}
+    # WAVファイル取得（Trim + 文字列化）
+    $files = Get-ChildItem $FolderPath -Filter *.wav | ForEach-Object { $_.Name.Trim() }
+    if ($files.Count -eq 0) {
+        Write-Host "フォルダに WAV ファイルがありません: $FolderPath"
+        return
+    }
 
-# 既存 JSON を読み込み（存在する場合）
-$existing = @{}
-if (Test-Path $jsonFile) {
-    try {
-        $existingJson = Get-Content $jsonFile -Raw | ConvertFrom-Json
-        foreach ($item in $existingJson) {
-            $existing[$item.file] = $item.label
+    # 既存 JSON 読み込み
+    $existing = @{}
+    $orderedList = @()
+    if (Test-Path $JsonPath) {
+        try {
+            $existingJson = Get-Content $JsonPath -Raw | ConvertFrom-Json
+            foreach ($item in $existingJson) {
+                $fileName = $item.file.Trim()
+                $orderedList += $fileName
+                $existing[$fileName] = $item.label
+            }
+        } catch {
+            Write-Host "既存 JSON が壊れているか無効です。新規作成します: $JsonPath"
         }
-    } catch {
-        Write-Host "既存 JSON が壊れているか無効です。新規作成します。"
-    }
-}
-
-# 新しい JSON 配列作成
-$jsonArray = @()
-foreach ($file in $files) {
-    $label = if ($existing.ContainsKey($file.Name)) { 
-        $existing[$file.Name]  # 既存の日本語ラベルを保持
-    } else {
-        [System.IO.Path]::GetFileNameWithoutExtension($file.Name)  # 新規ファイルはファイル名ベース
     }
 
-    $jsonArray += @{
-        file  = $file.Name
-        label = $label
-    }
-}
-
-# 1行1オブジェクト形式で書き出す
-$lines = $jsonArray | ForEach-Object { $_ | ConvertTo-Json -Compress }
-$all = "[`n" + ($lines -join ",`n") + "`n]"
-[System.IO.File]::WriteAllText($jsonFile, $all, [System.Text.Encoding]::UTF8)
-
-Write-Host "JSON生成完了: $jsonFile"
-
-
-# exaudio用
-$exaudioFolder = ".\exaudio"
-$exjsonFile = Join-Path $PSScriptRoot "exaudio-list.json"
-
-# exaudioフォルダがあるか確認
-if (!(Test-Path $exaudioFolder)) {
-    Write-Host "exaudio フォルダが見つかりません: $exaudioFolder"
-    exit
-}
-
-# WAVファイル取得
-$files = Get-ChildItem $exaudioFolder -Filter *.wav
-if ($files.Count -eq 0) {
-    Write-Host "exaudio フォルダに WAV ファイルがありません"
-    exit
-}
-
-# 既存 JSON を読み込み（存在する場合）
-$existing = @{}
-if (Test-Path $exjsonFile) {
-    try {
-        $existingJson = Get-Content $exjsonFile -Raw | ConvertFrom-Json
-        foreach ($item in $existingJson) {
-            $existing[$item.file] = $item.label
+    # 既存順序保持で JSON 配列作成
+    $jsonArray = @()
+    foreach ($fileName in $orderedList) {
+        if ($files -contains $fileName) {
+            $jsonArray += @{
+                file  = $fileName
+                label = $existing[$fileName]
+            }
         }
-    } catch {
-        Write-Host "既存 JSON が壊れているか無効です。新規作成します。"
     }
+
+    # 新規ファイルを末尾に追加（アルファベット順、小文字比較で重複防止）
+    $orderedLower = $orderedList | ForEach-Object { $_.ToLower() }
+    $newFiles = $files | Where-Object { -not ($orderedLower -contains $_.ToLower()) } | Sort-Object
+    foreach ($fileName in $newFiles) {
+        $jsonArray += @{
+            file  = $fileName
+            label = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
+        }
+    }
+
+    # JSON書き出し（1行1オブジェクト形式）
+    $lines = $jsonArray | ForEach-Object { $_ | ConvertTo-Json -Compress }
+    $all = "[`n" + ($lines -join ",`n") + "`n]"
+    [System.IO.File]::WriteAllText($JsonPath, $all, [System.Text.Encoding]::UTF8)
+
+    Write-Host "JSON生成完了: $JsonPath"
 }
 
-# 新しい JSON 配列作成
-$jsonArray = @()
-foreach ($file in $files) {
-    $label = if ($existing.ContainsKey($file.Name)) { 
-        $existing[$file.Name]  # 既存の日本語ラベルを保持
-    } else {
-        [System.IO.Path]::GetFileNameWithoutExtension($file.Name)  # 新規ファイルはファイル名ベース
-    }
-
-    $jsonArray += @{
-        file  = $file.Name
-        label = $label
-    }
-}
-
-# 1行1オブジェクト形式で書き出す
-$lines = $jsonArray | ForEach-Object { $_ | ConvertTo-Json -Compress }
-$all = "[`n" + ($lines -join ",`n") + "`n]"
-[System.IO.File]::WriteAllText($exjsonFile, $all, [System.Text.Encoding]::UTF8)
-
-Write-Host "JSON生成完了: $exjsonFile"
+# -------------------------------
+# audio と exaudio 両方更新
+# -------------------------------
+Update-AudioJson -FolderPath ".\audio" -JsonPath (Join-Path $PSScriptRoot "audio-list.json")
+Update-AudioJson -FolderPath ".\exaudio" -JsonPath (Join-Path $PSScriptRoot "exaudio-list.json")

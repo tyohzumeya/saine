@@ -31,7 +31,6 @@
 {"file":"dou.wav","label":"どう？"},
 {"file":"fukidashi.wav","label":"ぶふぉ"},
 {"file":"himei.wav","label":"悲鳴(音量注意)"},
-{"file":"gomenyurusite.wav","label":"ごめんなさいゆるして"},
 {"file":"gya-n.wav","label":"ぎゃあ～ん"},
 {"file":"hiu.wav","label":"ひぅ"},
 {"file":"iine.wav","label":"いいね"},
@@ -78,7 +77,7 @@
 {"file":"onikuyaketenai2.wav","label":"じゃあお肉も焼けたことだし焼けてないんですよね"},
 {"file":"pyonpyonsiteru.wav","label":"ぴょんぴょんしてる"},
 {"file":"sounanda.wav","label":"そうなんだ(喜)"},
-{"file":"souomotta.wav","label":"そう思った時がわたしにもありました"},
+{"file":"souomotta.wav","label":"そう思った時がわたくしもありました"},
 {"file":"niko.wav","label":"二個くらい"},
 {"file":"sanko.wav","label":"三個"},
 {"file":"sanbon.wav","label":"三本"},
@@ -94,5 +93,6 @@
 {"file":"usousok.wav","label":"うそうそ(高)"},
 {"file":"usousot.wav","label":"うそうそ(低)"},
 {"file":"ussoppyon.wav","label":"うっそっぴょ～ん(迫真)"},
+{"file":"gomenyurusite.wav","label":"ごめんなさいゆるして"},
 {"file":"yurushitepyon.wav","label":"ゆるしてぴょん"}
 ]
