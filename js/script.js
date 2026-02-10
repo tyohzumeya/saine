@@ -1,6 +1,5 @@
 const container = document.getElementById("button-container");
 let currentAudio = null;
-let isSecretMode = false;
 
 // 効果音
 const SE = {
@@ -18,7 +17,7 @@ function loadAudioList(jsonPath, audioDir) {
   fetch(jsonPath)
     .then(response => response.json())
     .then(list => {
-      list.forEach((item, index) => {
+      list.forEach((item) => {
         const btn = document.createElement("button");
         btn.textContent = item.label;
 
@@ -45,9 +44,6 @@ function loadAudioList(jsonPath, audioDir) {
    モード定義
 -------------------- */
 const MODES = {
-  default: {               // 初期
-    title: "Hello Saine World!"
-  },
   audio: {                // マイクラモード
     title: "Hello Minecraft Saine World!"
   },
@@ -59,7 +55,7 @@ const MODES = {
 /* --------------------
    現在のモード管理
 -------------------- */
-let currentMode = "default";
+let currentMode = null;
 
 /* --------------------
    モード切替関数
@@ -68,16 +64,14 @@ function switchMode(modeKey) {
   const mode = MODES[modeKey];
   if (!mode) return;
 
-  // 効果音（MODESに必要ならseプロパティ追加可能）
+  // 効果音（必要ならMODESにseを追加して再生可能）
   if (mode.se) {
     mode.se.currentTime = 0;
     mode.se.play();
   }
 
-  // 音源切替（modeKeyと同名のリストファイルをロード）
-  if ("default" -eq modeKey) {
-      loadAudioList(`/saine/${modeKey}-list.json`, modeKey);
-  }
+  // 音源リストをロード
+  loadAudioList(`/saine/${modeKey}-list.json`, modeKey);
 
   // タイトル変更
   document.getElementById("title").textContent = mode.title;
@@ -100,34 +94,8 @@ const COMMANDS = {
   },
   MINECRAFT: {
     sequence: ["m","i","n","e","c","r","a","f","t"],
-    action: () => switchMode("exaudio") // マインクラフトモード
-  },
-  DEBUG: {
-    sequence: ["d","e","b","u","g"],
-    action: () => switchMode("special") // debugキーで特殊モード
+    action: () => switchMode("audio") // マイクラモード
   }
 };
 
 let inputKeys = [];
-
-/* --------------------
-   キー入力監視
--------------------- */
-window.addEventListener("keydown", (e) => {
-  inputKeys.push(e.key.toLowerCase());
-
-  // 入力履歴は100で制限
-  if (inputKeys.length > 100) inputKeys.shift();
-
-  // 全コマンドチェック
-  for (const cmd of Object.values(COMMANDS)) {
-    if (inputKeys.slice(-cmd.sequence.length).join(",") === cmd.sequence.join(",")) {
-      cmd.action();
-    }
-  }
-});
-
-/* --------------------
-   初期読み込み
--------------------- */
-loadAudioList("/saine/audio-list.json", "default");
