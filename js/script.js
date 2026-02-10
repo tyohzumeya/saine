@@ -99,3 +99,26 @@ const COMMANDS = {
 };
 
 let inputKeys = [];
+
+/* --------------------
+   キー入力監視
+-------------------- */
+window.addEventListener("keydown", (e) => {
+  inputKeys.push(e.key.toLowerCase());
+
+  // 入力履歴は100で制限
+  if (inputKeys.length > 100) inputKeys.shift();
+
+  // 全コマンドチェック
+  for (const cmd of Object.values(COMMANDS)) {
+    if (inputKeys.slice(-cmd.sequence.length).join(",") === cmd.sequence.join(",")) {
+      cmd.action();
+    }
+  }
+});
+
+/* --------------------
+   初期状態はまっさら（何もロードしない）
+-------------------- */
+container.innerHTML = "";
+document.getElementById("title").textContent = "Hello Saine World!";
