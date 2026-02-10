@@ -1,7 +1,7 @@
 const bgmpanel = document.getElementById("bgm-audio-panel");
 const panel = document.getElementById("audio-panel");
 
-const data = {label: "bgm", volume: 0.15, file: "bgm/無料フリーBGM楽しいケルト曲Harvest.mp3", gap: 0.3};
+const data = {label: "bgm", volume: 0.15, file: "bgm/無料フリーBGM楽しいケルト曲Harvest.mp3", gap: 0};
 createAudio(data, bgmpanel);
 
 fetch("/saine/animal-voice-list.json")
@@ -46,9 +46,6 @@ function createAudio(item, panel) {
 
   // audio
   const audio = document.createElement("audio");
-  if (item.label === "bgm") {
-      audio.autoplay = true;
-  }
   audio.src = item.label === "bgm" ? item.file : `animalSE/${item.file}`;
   audio.volume = item.volume;
   ctrl.appendChild(audio);
