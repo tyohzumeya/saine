@@ -3,8 +3,8 @@ const panel = document.getElementById("audio-panel");
 fetch("/saine/animal-voice-list.json")
   .then(res => res.json())
   .then(voiceUrls => {
-    voiceUrls.forEach((item, index) => {
-    });
+    voiceUrls.forEach(item => {
+
       const ctrl = document.createElement("div");
       ctrl.className = "audio-controls";
 
@@ -36,19 +36,17 @@ fetch("/saine/animal-voice-list.json")
       vol.value = item.volume;
       ctrl.appendChild(vol);
 
-      // audioタグ
+      // audio
       const audio = document.createElement("audio");
       audio.src = item.file;
-      audio.loop = false;
       audio.volume = item.volume;
       ctrl.appendChild(audio);
 
       panel.appendChild(ctrl);
 
-      // 動作制御
       let lastVolume = item.volume;
       let isPlaying = false;
-      const gap = item.gap || 0;
+      const gap = (item.gap || 0) * 1000;
 
       playBtn.addEventListener("click", () => {
         if (!isPlaying) {
@@ -73,8 +71,12 @@ fetch("/saine/animal-voice-list.json")
 
       vol.addEventListener("input", () => {
         audio.volume = vol.value;
-        if (audio.volume == 0) muteBtn.textContent = "🔇";
-        else { muteBtn.textContent = "🔊"; lastVolume = audio.volume; }
+        if (audio.volume == 0) {
+          muteBtn.textContent = "🔇";
+        } else {
+          muteBtn.textContent = "🔊";
+          lastVolume = audio.volume;
+        }
       });
 
       muteBtn.addEventListener("click", () => {
@@ -89,16 +91,21 @@ fetch("/saine/animal-voice-list.json")
           muteBtn.textContent = "🔊";
         }
       });
-});
+
+    });
+  });
+
 
 const faceContainer = document.getElementById("fade-container");
 
-// ランダム切替関数
 function nextImage() {
-  const images = faceContainer.querySelectorAll("img"); // 親から子を取得
-  const activeIndex = images.findIndex(img => img.classList.contains("active"));
+  const images = Array.from(faceContainer.querySelectorAll("img"));
+  if (images.length === 0) return;
 
-  // 現在と同じ画像を避けてランダム選択
+  const activeIndex = images.findIndex(img =>
+    img.classList.contains("active")
+  );
+
   let nextIndex;
   do {
     nextIndex = Math.floor(Math.random() * images.length);
@@ -108,7 +115,6 @@ function nextImage() {
   images[nextIndex].classList.add("active");
 }
 
-// 画像タグを生成
 fetch("/saine/face-list.json")
   .then(res => res.json())
   .then(imageUrls => {
@@ -118,6 +124,5 @@ fetch("/saine/face-list.json")
       if (index === 0) img.classList.add("active");
       faceContainer.appendChild(img);
     });
-    // 3秒ごとに切り替え
     setInterval(nextImage, 3000);
-});
+  });
