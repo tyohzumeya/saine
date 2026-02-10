@@ -91,10 +91,6 @@ fetch("/saine/animal-voice-list.json")
       });
 });
 
-tracks.forEach(track => {
-
-});
-
 const faceContainer = document.getElementById("fade-container");
 
 // ランダム切替関数
