@@ -11,8 +11,8 @@ fetch("/saine/animal-voice-list.json")
       // 名前
       const nameSpan = document.createElement("span");
       nameSpan.className = "track-name";
-      nameSpan.title = track.name;
-      nameSpan.textContent = track.name;
+      nameSpan.title = label;
+      nameSpan.textContent = label;
       ctrl.appendChild(nameSpan);
 
       // 再生ボタン
@@ -33,22 +33,22 @@ fetch("/saine/animal-voice-list.json")
       vol.min = 0;
       vol.max = 1;
       vol.step = 0.01;
-      vol.value = track.volume;
+      vol.value = volume;
       ctrl.appendChild(vol);
 
       // audioタグ
       const audio = document.createElement("audio");
-      audio.src = track.file;
+      audio.src = file;
       audio.loop = false;
-      audio.volume = track.volume;
+      audio.volume = volume;
       ctrl.appendChild(audio);
 
       panel.appendChild(ctrl);
 
       // 動作制御
-      let lastVolume = track.volume;
+      let lastVolume = volume;
       let isPlaying = false;
-      const gap = track.gap || 0;
+      const gap = gap || 0;
 
       playBtn.addEventListener("click", () => {
         if (!isPlaying) {
