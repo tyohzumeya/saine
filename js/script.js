@@ -68,8 +68,9 @@ function switchMode(modeKey) {
 
   // 効果音（必要ならMODESにseを追加して再生可能）
   if (mode.se) {
-    mode.se.currentTime = 0;
-    mode.se.play();
+    const modeSE = new Audio(mode.se);
+    modeSE.currentTime = 0;
+    modeSE.play();
   }
 
   // 音源リストをロード
