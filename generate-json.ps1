@@ -95,7 +95,7 @@ Update-AudioJson -FolderPath ".\exaudio" -JsonPath (Join-Path $PSScriptRoot "exa
 # -------------------------------
 # animalSE は volume と gap を追加
 # -------------------------------
-Update-AudioJson -FolderPath ".\animalSE" -JsonPath (Join-Path $PSScriptRoot "animal-voice-list.json") -Volume 0.3 -Gap 0.2
+Update-AudioJson -FolderPath ".\animalSE" -JsonPath (Join-Path $PSScriptRoot "animal-voice-list.json") -Volume 0.5 -Gap 0.2
 
 # -------------------------------
 # 他のフォルダ

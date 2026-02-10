@@ -45,10 +45,12 @@ function loadAudioList(jsonPath, audioDir) {
 -------------------- */
 const MODES = {
   audio: {                // マイクラモード
-    title: "Hello Minecraft Saine World!"
+    title: "Hello Minecraft Saine World!",
+    se: villiger.mp3
   },
   exaudio: {               // 隠しモード
-    title: "Hello Hentai Saine World!"
+    title: "Hello Hentai Saine World!",
+    se: unlock.mp3
   }
 };
 
