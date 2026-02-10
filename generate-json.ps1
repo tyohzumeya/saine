@@ -2,8 +2,10 @@
 
 function Update-AudioJson {
     param(
-        [string]$FolderPath,       # 音声フォルダ
-        [string]$JsonPath          # 出力 JSON
+        [string]$FolderPath,        # 音声フォルダ
+        [string]$JsonPath,          # 出力 JSON
+        [double]$Volume = $null,    # 任意の volume
+        [double]$Gap    = $null     # 任意の gap
     )
 
     # フォルダ存在確認
@@ -12,11 +14,20 @@ function Update-AudioJson {
         return
     }
 
-    # WAVファイル取得（Trim + 文字列化）
-    $files = Get-ChildItem $FolderPath -Filter *.wav | ForEach-Object { $_.Name.Trim() }
-    if ($files.Count -eq 0) {
-        Write-Host "フォルダに WAV ファイルがありません: $FolderPath"
-        return
+    if ($FolderPath -ne ".\saineFace") {
+        # WAVファイル取得（Trim + 文字列化）
+        $files = Get-ChildItem $FolderPath -Filter *.wav | ForEach-Object { $_.Name.Trim() }
+        if ($files.Count -eq 0) {
+            Write-Host "フォルダに WAV ファイルがありません: $FolderPath"
+            return
+        }
+    } else {
+        # WAVファイル取得（Trim + 文字列化）
+        $files = Get-ChildItem $FolderPath -Filter *.png | ForEach-Object { $_.Name.Trim() }
+        if ($files.Count -eq 0) {
+            Write-Host "フォルダに PNG ファイルがありません: $FolderPath"
+            return
+        }
     }
 
     # 既存 JSON 読み込み
@@ -39,10 +50,16 @@ function Update-AudioJson {
     $jsonArray = @()
     foreach ($fileName in $orderedList) {
         if ($files -contains $fileName) {
-            $jsonArray += @{
+            $item = @{
                 file  = $fileName
                 label = $existing[$fileName]
             }
+
+            # 任意の要素を追加
+            if ($Volume -ne 0) { $item.volume = $Volume }
+            if ($Gap    -ne 0) { $item.gap    = $Gap }
+
+            $jsonArray += $item
         }
     }
 
@@ -50,10 +67,15 @@ function Update-AudioJson {
     $orderedLower = $orderedList | ForEach-Object { $_.ToLower() }
     $newFiles = $files | Where-Object { -not ($orderedLower -contains $_.ToLower()) } | Sort-Object
     foreach ($fileName in $newFiles) {
-        $jsonArray += @{
+        $item = @{
             file  = $fileName
             label = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
         }
+
+        if ($Volume -ne 0) { $item.volume = $Volume }
+        if ($Gap    -ne 0) { $item.gap    = $Gap }
+
+        $jsonArray += $item
     }
 
     # JSON書き出し（1行1オブジェクト形式）
@@ -65,7 +87,17 @@ function Update-AudioJson {
 }
 
 # -------------------------------
-# audio と exaudio 両方更新
+# audio と exaudio は従来通り
 # -------------------------------
 Update-AudioJson -FolderPath ".\audio" -JsonPath (Join-Path $PSScriptRoot "audio-list.json")
 Update-AudioJson -FolderPath ".\exaudio" -JsonPath (Join-Path $PSScriptRoot "exaudio-list.json")
+
+# -------------------------------
+# animalSE は volume と gap を追加
+# -------------------------------
+Update-AudioJson -FolderPath ".\animalSE" -JsonPath (Join-Path $PSScriptRoot "animal-voice-list.json") -Volume 0.3 -Gap 0.2
+
+# -------------------------------
+# 他のフォルダ
+# -------------------------------
+Update-AudioJson -FolderPath ".\saineFace" -JsonPath (Join-Path $PSScriptRoot "face-list.json")

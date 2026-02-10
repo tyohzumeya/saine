@@ -1,0 +1,73 @@
+/* players.css */
+#audio-panel {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 200px; /* 必要に応じて調整 */
+  z-index: 9999;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  background: #111;
+  border-radius: 12px;
+  margin-bottom: 6px;
+}
+
+.track-name {
+  color: #ccc;
+  font-size: 10px;
+  width: 60px;
+  max-width: 60px;  /* 左揃えで再生ボタンにかぶらない */
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid #aaa;
+  background: linear-gradient(#eee,#aaa);
+  color: #000;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+input[type=range] {
+  width: 70px;
+  height: 3px;
+  accent-color: #ccc;
+  cursor: pointer;
+}
+
+/* フェード用 */
+.fade-img {
+  position: relative;
+  width: 300px;      /* お好みで調整 */
+  height: 200px;
+  overflow: hidden;
+}
+
+.fade-img img {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out; /* フェード時間 */
+  position: absolute;
+  bottom: 0;
+}
+
+.fade-img img.active {
+  opacity: 1;
+}
