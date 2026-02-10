@@ -46,7 +46,7 @@ function createAudio(item, panel) {
 
   // audio
   const audio = document.createElement("audio");
-  audio.src = `animalSE/${item.file}`;
+  audio.src = item.label === "bgm" ? ${item.file} : `animalSE/${item.file}`;
   audio.volume = item.volume;
   ctrl.appendChild(audio);
 
