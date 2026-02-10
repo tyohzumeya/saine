@@ -38,7 +38,7 @@ fetch("/saine/animal-voice-list.json")
 
       // audio
       const audio = document.createElement("audio");
-      audio.src = item.file;
+      audio.src = `animalSE/${item.file}`;
       audio.volume = item.volume;
       ctrl.appendChild(audio);
 
