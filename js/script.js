@@ -41,80 +41,93 @@ function loadAudioList(jsonPath, audioDir) {
     .catch(err => console.error("JSON読み込みエラー:", err));
 }
 
-// 初期読み込み（通常）
-loadAudioList("/saine/audio-list.json", "audio");
+/* --------------------
+   モード定義
+-------------------- */
+const MODES = {
+  default: {               // 初期
+    title: "Hello Saine World!"
+  },
+  audio: {                // マイクラモード
+    title: "Hello Minecraft Saine World!"
+  },
+  exaudio: {               // 隠しモード
+    title: "Hello Hentai Saine World!"
+  }
+};
 
 /* --------------------
-   コナミコマンド
+   現在のモード管理
 -------------------- */
-const KONAMI = [
-  "arrowup",
-  "arrowup",
-  "arrowdown",
-  "arrowdown",
-  "arrowleft",
-  "arrowright",
-  "arrowleft",
-  "arrowright",
-  "b",
-  "a"
-];
+let currentMode = "default";
+
+/* --------------------
+   モード切替関数
+-------------------- */
+function switchMode(modeKey) {
+  const mode = MODES[modeKey];
+  if (!mode) return;
+
+  // 効果音（MODESに必要ならseプロパティ追加可能）
+  if (mode.se) {
+    mode.se.currentTime = 0;
+    mode.se.play();
+  }
+
+  // 音源切替（modeKeyと同名のリストファイルをロード）
+  if ("default" -eq modeKey) {
+      loadAudioList(`/saine/${modeKey}-list.json`, modeKey);
+  }
+
+  // タイトル変更
+  document.getElementById("title").textContent = mode.title;
+
+  // 現在モード更新
+  currentMode = modeKey;
+}
+
+/* --------------------
+   コマンド定義
+-------------------- */
+const COMMANDS = {
+  KONAMI: {
+    sequence: [
+      "arrowup","arrowup","arrowdown","arrowdown",
+      "arrowleft","arrowright","arrowleft","arrowright",
+      "b","a"
+    ],
+    action: () => switchMode("exaudio") // コナミコマンドで裏モード
+  },
+  MINECRAFT: {
+    sequence: ["m","i","n","e","c","r","a","f","t"],
+    action: () => switchMode("exaudio") // マインクラフトモード
+  },
+  DEBUG: {
+    sequence: ["d","e","b","u","g"],
+    action: () => switchMode("special") // debugキーで特殊モード
+  }
+};
 
 let inputKeys = [];
 
+/* --------------------
+   キー入力監視
+-------------------- */
 window.addEventListener("keydown", (e) => {
   inputKeys.push(e.key.toLowerCase());
 
-  if (inputKeys.length > KONAMI.length) {
-    inputKeys.shift();
-  }
+  // 入力履歴は100で制限
+  if (inputKeys.length > 100) inputKeys.shift();
 
-  if ( inputKeys.join(",") === KONAMI.join(",")) {
-    toggleSecretMode();
+  // 全コマンドチェック
+  for (const cmd of Object.values(COMMANDS)) {
+    if (inputKeys.slice(-cmd.sequence.length).join(",") === cmd.sequence.join(",")) {
+      cmd.action();
+    }
   }
 });
 
-function toggleSecretMode() {
-  if (isSecretMode) {
-    deactivateSecretMode();
-  } else {
-    activateSecretMode();
-  }
-}
-
 /* --------------------
-   シークレット解禁
+   初期読み込み
 -------------------- */
-function activateSecretMode() {
-  isSecretMode = true;
-
-  // 効果音
-  SE.unlock.currentTime = 0;
-  SE.unlock.play();
-
-  // 演出
-  container.classList.add("secret");
-
-  // 隠し音源に切り替え
-  loadAudioList("/saine/exaudio-list.json", "exaudio");
-  
-  // タイトルを変更
-  document.getElementById("title").textContent = "Hello Hentai Saine World!";
-}
-
-function deactivateSecretMode() {
-  isSecretMode = false;
-
-  // 効果音
-  SE.rollback.currentTime = 0;
-  SE.rollback.play();
-
-  // ボタン戻す
-  loadAudioList("/saine/audio-list.json", "audio");
-
-  // 見た目戻す
-  container.classList.remove("secret");
-  
-  // タイトルを変更
-  document.getElementById("title").textContent = "Hello Saine World!";
-}
+loadAudioList("/saine/audio-list.json", "default");

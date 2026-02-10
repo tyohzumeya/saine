@@ -12,7 +12,7 @@ button {
 }
 button:hover { background-color: #ddd; }
  
-.audio-buttons.secret {
+.audio-buttons > * {
   animation: unlockFlash 0.4s ease-in-out 2;
 }
 
