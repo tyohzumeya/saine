@@ -120,7 +120,7 @@ fetch("/saine/face-list.json")
   .then(imageUrls => {
     imageUrls.forEach((url, index) => {
       const img = document.createElement("img");
-      img.src = url;
+      img.src = `saineFace/${url}`;
       if (index === 0) img.classList.add("active");
       faceContainer.appendChild(img);
     });
