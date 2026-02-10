@@ -1,6 +1,6 @@
 body { font-family: sans-serif; padding: 20px; }
 h1 { margin-bottom: 20px; }
-.audio-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+.audio-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-right: 200px;}
 button {
   padding: 8px 16px;
   font-size: 14px;

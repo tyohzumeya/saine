@@ -3,7 +3,7 @@ const panel = document.getElementById("audio-panel");
 fetch("/saine/animal-voice-list.json")
   .then(res => res.json())
   .then(voiceUrls => {
-    voiceUrls.forEach((file, label, volume, gap) => {
+    voiceUrls.forEach((item, index) => {
     });
       const ctrl = document.createElement("div");
       ctrl.className = "audio-controls";
@@ -11,8 +11,8 @@ fetch("/saine/animal-voice-list.json")
       // 名前
       const nameSpan = document.createElement("span");
       nameSpan.className = "track-name";
-      nameSpan.title = label;
-      nameSpan.textContent = label;
+      nameSpan.title = item.label;
+      nameSpan.textContent = item.label;
       ctrl.appendChild(nameSpan);
 
       // 再生ボタン
@@ -33,22 +33,22 @@ fetch("/saine/animal-voice-list.json")
       vol.min = 0;
       vol.max = 1;
       vol.step = 0.01;
-      vol.value = volume;
+      vol.value = item.volume;
       ctrl.appendChild(vol);
 
       // audioタグ
       const audio = document.createElement("audio");
-      audio.src = file;
+      audio.src = item.file;
       audio.loop = false;
-      audio.volume = volume;
+      audio.volume = item.volume;
       ctrl.appendChild(audio);
 
       panel.appendChild(ctrl);
 
       // 動作制御
-      let lastVolume = volume;
+      let lastVolume = item.volume;
       let isPlaying = false;
-      const gap = gap || 0;
+      const gap = item.gap || 0;
 
       playBtn.addEventListener("click", () => {
         if (!isPlaying) {
