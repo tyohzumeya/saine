@@ -43,6 +43,17 @@ function loadAudioList(jsonPath, audioDir) {
 // ===== AudioContext 1つだけ作る =====
 const audioCtx = new AudioContext();
 
+// ユーザー操作で AudioContext を有効化
+function ensureAudioContext() {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
+
+// ページ上で一度だけユーザー操作を検知
+window.addEventListener("click", ensureAudioContext, { once: true });
+window.addEventListener("keydown", ensureAudioContext, { once: true });
+
 /* --------------------
    モード定義
 -------------------- */
@@ -71,8 +82,13 @@ Promise.all(Object.keys(MODES).map(loadSE));
 
 // ===== SE再生 =====
 function playSE(mode) {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+  
   const buffer = MODES[mode].buffer;
   if (!buffer) return; // まだロード中なら無視
+  
   const source = audioCtx.createBufferSource();
   source.buffer = buffer;
   source.connect(audioCtx.destination);
