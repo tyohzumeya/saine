@@ -154,7 +154,7 @@ window.addEventListener("keydown", async (e) => {
   handleKey(e.key);
 });
 
-function handleKey(key) {
+async function handleKey(key) {
   inputKeys.push(key.toLowerCase());
 
   if (inputKeys.length > MAX_LEN) {
