@@ -216,7 +216,7 @@ window.addEventListener("message", (e) => {
   }
 });
 
-const iframe = document.getElementById("playerFrame");
+let iframe = null;
 let voiceUrlsList = [];
 
 async function loadVoiceList() {
@@ -228,6 +228,7 @@ loadVoiceList();
 
 function createAudio(id) {
   const item = voiceUrlsList.find(item => item.label === id);
+  iframe = document.getElementById("playerFrame");
 
   if (!item) return;
 
