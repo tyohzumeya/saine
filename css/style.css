@@ -53,6 +53,5 @@ button:hover { background-color: #ddd; }
 }
 
 .modal.show {
-  display: flex;
   opacity: 1;
 }

@@ -188,13 +188,17 @@ const modalClose = document.getElementById("modalClose");
 function displayModal() {
   modalImg.src = "HA3wUOYbkAIPeS1.jpg";
   // モーダルを表示する時
-  modal.classList.add("show");
+  modal.style.display = "flex";       // DOM上に出す
+  setTimeout(() => modal.classList.add("show"), 10); // 10msでフェードイン開始
 }
 
 // モーダルの外側クリックで閉じる
 modal.addEventListener("click", (e) => {
   if (e.target === modal || e.target === modalClose) {
     // モーダルを閉じる時
-    modal.classList.remove("show");
+    modal.classList.remove("show"); // フェードアウト
+    modal.addEventListener("transitionend", () => {
+      modal.style.display = "none";     // フェードアウト後に完全に非表示
+    }, { once: true });
   }
 });
