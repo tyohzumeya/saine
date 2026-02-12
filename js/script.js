@@ -151,7 +151,11 @@ async function sha256(str) {
 
 // ===== キー監視 =====
 window.addEventListener("keydown", async (e) => {
-  inputKeys.push(e.key.toLowerCase());
+  handleKey(e.key);
+});
+
+function handleKey(key) {
+  inputKeys.push(key.toLowerCase());
 
   if (inputKeys.length > MAX_LEN) {
     inputKeys.shift();
@@ -172,7 +176,7 @@ window.addEventListener("keydown", async (e) => {
       break;
     }
   }
-});
+}
 
 /* --------------------
    初期状態はまっさら（何もロードしない）
