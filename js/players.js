@@ -131,3 +131,8 @@ fetch("/saine/face-list.json")
     });
     setInterval(nextImage, 3000);
   });
+  
+// iframe上の操作を親に渡す
+window.addEventListener("keydown", (e) => {
+  window.parent.postMessage({ type: "key", key: e.key }, window.origin);
+});

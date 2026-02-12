@@ -202,3 +202,11 @@ modal.addEventListener("click", (e) => {
     }, { once: true });
   }
 });
+
+// iframeの入力を監視
+window.addEventListener("message", (e) => {
+  if (e.origin !== window.location.origin) return;
+  if (e.data.type === "key") {
+    handleKey(e.data.key); // 元のキー入力処理を呼び出す
+  }
+});
