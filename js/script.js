@@ -43,10 +43,11 @@ function loadAudioList(jsonPath, audioDir) {
 // ===== AudioContext 1つだけ作る =====
 const audioCtx = new AudioContext();
 
-// ユーザー操作で AudioContext を有効化
 function ensureAudioContext() {
   if (audioCtx.state === "suspended") {
-    audioCtx.resume();
+    audioCtx.resume().then(() => {
+      console.log("AudioContext resumed");
+    });
   }
 }
 
@@ -109,7 +110,7 @@ function switchMode(modeKey) {
 
   // 効果音（必要ならMODESにseを追加して再生可能）
   if (mode.se) {
-      playSE(mode);
+      playSE(modeKey);
   }
 
   // 音源リストをロード
