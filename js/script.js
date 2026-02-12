@@ -226,11 +226,16 @@ async function loadVoiceList() {
 
 loadVoiceList();
 
+const createdAudios = new Set();
+
 function createAudio(id) {
   const item = voiceUrlsList.find(item => item.label === id);
   iframe = document.getElementById("playerFrame");
 
   if (!item) return;
+  
+  if (createdAudios.has(id)) return;
+  createdAudios.add(id);
 
   iframe.contentWindow.postMessage(
     { type: "callCreateAudio", item: item },
