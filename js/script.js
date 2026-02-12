@@ -187,12 +187,14 @@ const modalClose = document.getElementById("modalClose");
 
 function displayModal() {
   modalImg.src = "HA3wUOYbkAIPeS1.jpg";
-  modal.hidden = false;
+  // モーダルを表示する時
+  modal.classList.add("show");
 }
 
 // モーダルの外側クリックで閉じる
 modal.addEventListener("click", (e) => {
   if (e.target === modal || e.target === modalClose) {
-    modal.hidden = true;
+    // モーダルを閉じる時
+    modal.classList.remove("show");
   }
 });
