@@ -127,10 +127,11 @@ function switchMode(modeKey) {
    コマンド定義
 -------------------- */
 // ===== コマンド定義（ハッシュのみ） =====
-const COMMANDS = [
-  { length: 5,  hash: "b7f4ad296a6d46cf6b0f9c706beb0666e12b942a11d5c3a96a6cfcd662d898a0", action: () => displayModal()        }, //SAINE
-  { length: 10, hash: "231972e16c02efaec6b7314d6048fae1348789e83f6b94f1b3e250104aa3e932", action: () => switchMode("exaudio") }, //KNM
-  { length: 9,  hash: "718414d60ffc4ffc7cecb4e99a52e538f2cb36d44be5cf1d519e74998a46b757", action: () => switchMode("audio")   }  //MC
+const COMMANDS = [ 
+  { length: 10, hash: "85287cf7da591a32baeb096832195ea89b9f5a03324158211ee03218106df45c", id: "tonakai", action: (id) => createAudio(id) }, //
+  { length: 5,  hash: "b7f4ad296a6d46cf6b0f9c706beb0666e12b942a11d5c3a96a6cfcd662d898a0", id: "", action: () => displayModal()           }, //SAINE
+  { length: 10, hash: "231972e16c02efaec6b7314d6048fae1348789e83f6b94f1b3e250104aa3e932", id: "exaudio", action: (id) => switchMode(id)  }, //KNM
+  { length: 9,  hash: "718414d60ffc4ffc7cecb4e99a52e538f2cb36d44be5cf1d519e74998a46b757", id: "audio", action: (id) => switchMode(id)    }  //MC
 ];
 
 // 最大長は一度だけ計算
@@ -171,7 +172,7 @@ async function handleKey(key) {
     const hash = await sha256(slice);
 
     if (hash === cmd.hash) {
-      cmd.action();
+      cmd.action(cmd.id);
       inputKeys.length = 0; // 配列再生成しない（微最適化）
       break;
     }
@@ -214,3 +215,25 @@ window.addEventListener("message", (e) => {
     handleKey(e.data.key); // 元のキー入力処理を呼び出す
   }
 });
+
+const iframe = document.getElementById("playerFrame");
+const voiceUrlsList = [];
+
+fetch("/saine/animal-voice-list.json")
+  .then(res => res.json())
+  .then(voiceUrls => {
+    voiceUrlsList = voiceUrls;
+  });
+
+function createAudio(id) {
+  voiceUrlsList.forEach((item) => {
+    if (item.label === id) {
+      // 👇 子へ通知
+      iframe.contentWindow.postMessage(
+        { type: "callCreateAudio", item: item },
+        window.origin
+      );
+      break;
+    }
+  });
+}

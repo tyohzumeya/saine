@@ -87,10 +87,11 @@ function Update-AudioJson {
 }
 
 # -------------------------------
-# audio と exaudio は従来通り
+# audio と exaudio とzooは従来通り
 # -------------------------------
 Update-AudioJson -FolderPath ".\audio" -JsonPath (Join-Path $PSScriptRoot "audio-list.json")
 Update-AudioJson -FolderPath ".\exaudio" -JsonPath (Join-Path $PSScriptRoot "exaudio-list.json")
+Update-AudioJson -FolderPath ".\zoo" -JsonPath (Join-Path $PSScriptRoot "zooaudio-list.json")
 
 # -------------------------------
 # animalSE は volume と gap を追加

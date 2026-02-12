@@ -4,13 +4,13 @@ const panel = document.getElementById("audio-panel");
 const data = {label: "bgm", volume: 0.15, file: "bgm/無料フリーBGM楽しいケルト曲Harvest.mp3", gap: 0};
 createAudio(data, bgmpanel);
 
-fetch("/saine/animal-voice-list.json")
-  .then(res => res.json())
-  .then(voiceUrls => {
-    voiceUrls.forEach(item => {
-      createAudio(item, panel);
-    });
-  });
+window.addEventListener("message", (e) => {
+  if (e.origin !== window.location.origin) return;
+
+  if (e.data.type === "callCreateAudio") {
+    createAudio(e.data.item, panel);
+  }
+});
 
 function createAudio(item, panel) {
   const ctrl = document.createElement("div");
