@@ -33,6 +33,8 @@ button:hover { background-color: #ddd; }
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .modal-content {
@@ -52,4 +54,5 @@ button:hover { background-color: #ddd; }
 
 .modal.show {
   display: flex;
+  opacity: 1;
 }
