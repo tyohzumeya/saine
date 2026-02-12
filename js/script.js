@@ -226,14 +226,12 @@ fetch("/saine/animal-voice-list.json")
   });
 
 function createAudio(id) {
-  voiceUrlsList.forEach((item) => {
-    if (item.label === id) {
-      // 👇 子へ通知
-      iframe.contentWindow.postMessage(
-        { type: "callCreateAudio", item: item },
-        window.origin
-      );
-      break;
-    }
-  });
+  const item = voiceUrlsList.find(item => item.label === id);
+
+  if (!item) return;
+
+  iframe.contentWindow.postMessage(
+    { type: "callCreateAudio", item: item },
+    window.origin
+  );
 }
