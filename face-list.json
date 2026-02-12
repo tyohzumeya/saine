@@ -1,4 +1,16 @@
 ﻿[
 {"file":"kufu.png","label":"kufu"},
-{"file":"nikkori.png","label":"nikkori"}
+{"file":"nikkori.png","label":"nikkori"},
+{"file":"hanme.png","label":"hanme"},
+{"file":"niko.png","label":"niko"},
+{"file":"nubo.png","label":"nubo"},
+{"file":"yoko.png","label":"yoko"},
+{"file":"egao.png","label":"egao"},
+{"file":"happy.png","label":"happy"},
+{"file":"magao.png","label":"magao"},
+{"file":"o.png","label":"o"},
+{"file":"sad.png","label":"sad"},
+{"file":"toji.png","label":"toji"},
+{"file":"tuya.png","label":"tuya"},
+{"file":"uink.png","label":"uink"}
 ]
