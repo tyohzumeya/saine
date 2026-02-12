@@ -128,8 +128,9 @@ function switchMode(modeKey) {
 -------------------- */
 // ===== コマンド定義（ハッシュのみ） =====
 const COMMANDS = [
+  { length: 5,  hash: "b7f4ad296a6d46cf6b0f9c706beb0666e12b942a11d5c3a96a6cfcd662d898a0", action: () => displayModal()        }, //SAINE
   { length: 10, hash: "231972e16c02efaec6b7314d6048fae1348789e83f6b94f1b3e250104aa3e932", action: () => switchMode("exaudio") }, //KNM
-  { length: 9,  hash: "718414d60ffc4ffc7cecb4e99a52e538f2cb36d44be5cf1d519e74998a46b757", action: () => switchMode("audio") }    //MC
+  { length: 9,  hash: "718414d60ffc4ffc7cecb4e99a52e538f2cb36d44be5cf1d519e74998a46b757", action: () => switchMode("audio")   }  //MC
 ];
 
 // 最大長は一度だけ計算
@@ -178,3 +179,20 @@ window.addEventListener("keydown", async (e) => {
 -------------------- */
 container.innerHTML = "";
 document.getElementById("title").textContent = "Hello Saine World!";
+
+// モーダル要素取得
+const modal = document.getElementById("imageModal");
+const modalImg = document.getElementById("modalImg");
+const modalClose = document.getElementById("modalClose");
+
+function displayModal() {
+  modalImg.src = "HA3wUOYbkAIPeS1.jpg";
+  modal.hidden = false;
+}
+
+// モーダルの外側クリックで閉じる
+modal.addEventListener("click", (e) => {
+  if (e.target === modal || e.target === modalClose) {
+    modal.hidden = true;
+  }
+});
