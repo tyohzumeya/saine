@@ -217,13 +217,14 @@ window.addEventListener("message", (e) => {
 });
 
 const iframe = document.getElementById("playerFrame");
-const voiceUrlsList = [];
+let voiceUrlsList = [];
 
-fetch("/saine/animal-voice-list.json")
-  .then(res => res.json())
-  .then(voiceUrls => {
-    voiceUrlsList = voiceUrls;
-  });
+async function loadVoiceList() {
+  const res = await fetch("/saine/animal-voice-list.json");
+  voiceUrlsList = await res.json();
+}
+
+loadVoiceList();
 
 function createAudio(id) {
   const item = voiceUrlsList.find(item => item.label === id);
