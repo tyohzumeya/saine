@@ -40,19 +40,44 @@ function loadAudioList(jsonPath, audioDir) {
     .catch(err => console.error("JSON読み込みエラー:", err));
 }
 
+// ===== AudioContext 1つだけ作る =====
+const audioCtx = new AudioContext();
+
 /* --------------------
    モード定義
 -------------------- */
 const MODES = {
   audio: {                // マイクラモード
     title: "Hello Minecraft Saine World!",
-    se: "villiger.mp3"
+    se: "villiger.mp3",
+    buffer: null // 後でロード
   },
   exaudio: {               // 隠しモード
     title: "Hello Hentai Saine World!",
-    se: "unlock.mp3"
+    se: "unlock.mp3",
+    buffer: null // 後でロード
   }
 };
+
+// ===== SE 事前ロード =====
+async function loadSE(mode) {
+  const res = await fetch(MODES[mode].se);
+  const arrayBuffer = await res.arrayBuffer();
+  MODES[mode].buffer = await audioCtx.decodeAudioData(arrayBuffer);
+}
+
+// ページロード時に全モードのSEをロード
+Promise.all(Object.keys(MODES).map(loadSE));
+
+// ===== SE再生 =====
+function playSE(mode) {
+  const buffer = MODES[mode].buffer;
+  if (!buffer) return; // まだロード中なら無視
+  const source = audioCtx.createBufferSource();
+  source.buffer = buffer;
+  source.connect(audioCtx.destination);
+  source.start();
+}
 
 /* --------------------
    現在のモード管理
@@ -68,9 +93,7 @@ function switchMode(modeKey) {
 
   // 効果音（必要ならMODESにseを追加して再生可能）
   if (mode.se) {
-    const modeSE = new Audio(mode.se);
-    modeSE.currentTime = 0;
-    modeSE.play();
+      playSE(mode);
   }
 
   // 音源リストをロード
