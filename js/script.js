@@ -68,6 +68,11 @@ const MODES = {
     title: "Hello Hentai Saine World!",
     se: "unlock.mp3",
     buffer: null // 後でロード
+  },
+  zooaudio: {               // 動物園モード
+    title: "Hello Animal Saine World!",
+    se: "animalSE/reinoyatsu.wav",
+    buffer: null // 後でロード
   }
 };
 
@@ -127,8 +132,9 @@ function switchMode(modeKey) {
    コマンド定義
 -------------------- */
 // ===== コマンド定義（ハッシュのみ） =====
-const COMMANDS = [ 
-  { length: 10, hash: "85287cf7da591a32baeb096832195ea89b9f5a03324158211ee03218106df45c", id: "tonakai", action: (id) => createAudio(id) }, //
+const COMMANDS = [  
+  { length: 3,  hash: "2915eba109379e098794b2b6384a3d3289748a2c32273832880258d2f9556551", id: "zooaudio", action: (id) => switchMode(id) }, //ANIMAL
+  { length: 10, hash: "85287cf7da591a32baeb096832195ea89b9f5a03324158211ee03218106df45c", id: "tonakai", action: (id) => createAudio(id) }, //DEKKA
   { length: 5,  hash: "b7f4ad296a6d46cf6b0f9c706beb0666e12b942a11d5c3a96a6cfcd662d898a0", id: "", action: () => displayModal()           }, //SAINE
   { length: 10, hash: "231972e16c02efaec6b7314d6048fae1348789e83f6b94f1b3e250104aa3e932", id: "exaudio", action: (id) => switchMode(id)  }, //KNM
   { length: 9,  hash: "718414d60ffc4ffc7cecb4e99a52e538f2cb36d44be5cf1d519e74998a46b757", id: "audio", action: (id) => switchMode(id)    }  //MC

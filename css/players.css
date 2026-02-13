@@ -5,7 +5,7 @@
   right: 10px;
   width: 200px; /* 必要に応じて調整 */
   height: 330px;
-  z-index: 9999;
+  z-index: 1000;
   margin-top: 35px;
   overflow: scroll;
 }
