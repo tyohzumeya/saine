@@ -222,7 +222,8 @@ window.addEventListener("message", (e) => {
   }
 });
 
-const iframe = document.getElementById("playerFrame");
+let iframe = null;
+let audio = null;
 let voiceUrlsList = [];
 
 async function loadVoiceList() {
@@ -236,6 +237,8 @@ const createdAudios = new Set();
 
 function createAudio(id) {
   const item = voiceUrlsList.find(item => item.label === id);
+  iframe = document.getElementById("playerFrame");
+  audio = iframe.contentWindow.document.getElementById("bgmAudio");
 
   if (!item) return;
   
@@ -254,7 +257,6 @@ const gameModal = document.getElementById("gameModal");
 const openGameBtn = document.getElementById("openGameBtn");
 const gameClose = document.getElementById("gameClose");
 const gameBoard = document.getElementById("gameBoard");
-const audio = iframe.contentWindow.document.getElementById("bgmAudio");
 
 openGameBtn.addEventListener("click", () => {
   gameModal.style.display = "flex"; // displayで表示
