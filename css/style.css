@@ -56,28 +56,27 @@ button:hover { background-color: #ddd; }
   opacity: 1;
 }
 
-/* ゲームモーダル専用 */
+/* モーダル全体は非表示デフォルト */
 #gameModal {
+  display: none;       /* これで初期は非表示 */
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,0.6);
-  display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10000; /* iframeより上に */
+  z-index: 10000;
 
-  /* 重要: 背景はクリック無効化 */
-  pointer-events: none;
+  pointer-events: none; /* 背景クリック無効 */
 }
 
-.modal-inner {
+/* 中身だけクリック可能 */
+#gameModal .modal-inner {
   background: white;
   padding: 20px;
   border-radius: 10px;
   width: 500px;
   text-align: center;
 
-  /* コンテンツだけクリック可能に */
   pointer-events: auto;
 }
 

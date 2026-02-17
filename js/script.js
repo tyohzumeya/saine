@@ -257,12 +257,12 @@ const gameClose = document.getElementById("gameClose");
 const gameBoard = document.getElementById("gameBoard");
 
 openGameBtn.addEventListener("click", () => {
-  gameModal.hidden = false;
+  gameModal.style.display = "flex"; // displayで表示
   startMemoryGame();
 });
 
 gameClose.addEventListener("click", () => {
-  gameModal.hidden = true;
+  gameModal.style.display = "none"; // displayで非表示
 });
 
 function startMemoryGame() {
