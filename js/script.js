@@ -222,7 +222,7 @@ window.addEventListener("message", (e) => {
   }
 });
 
-let iframe = null;
+const iframe = document.getElementById("playerFrame");
 let voiceUrlsList = [];
 
 async function loadVoiceList() {
@@ -236,7 +236,6 @@ const createdAudios = new Set();
 
 function createAudio(id) {
   const item = voiceUrlsList.find(item => item.label === id);
-  iframe = document.getElementById("playerFrame");
 
   if (!item) return;
   
@@ -255,7 +254,6 @@ const gameModal = document.getElementById("gameModal");
 const openGameBtn = document.getElementById("openGameBtn");
 const gameClose = document.getElementById("gameClose");
 const gameBoard = document.getElementById("gameBoard");
-const iframe = document.getElementById("playerFrame");
 const audio = iframe.contentWindow.document.getElementById("bgmAudio");
 
 openGameBtn.addEventListener("click", () => {
