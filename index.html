@@ -17,6 +17,17 @@
   <img class="modal-content" id="modalImg">
 </div>
 
+<button id="openGameBtn">🃏 神経衰弱で遊ぶ</button>
+
+<!-- ゲーム用モーダル -->
+<div id="gameModal" class="modal" hidden>
+  <div class="modal-inner">
+    <span id="gameClose" class="modal-close">&times;</span>
+    <h2>神経衰弱ゲーム</h2>
+    <div id="gameBoard"></div>
+  </div>
+</div>
+
 <script src="js/script.js"></script>
 <iframe id="playerFrame" src="players.html" style="position:fixed;top:10px;right:10px;width:220px;height:-webkit-fill-available;border:none;z-index:9999;" scrolling="no"></iframe>
 

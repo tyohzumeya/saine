@@ -248,3 +248,72 @@ function createAudio(id) {
     window.origin
   );
 }
+
+// ===== 神経衰弱ゲーム =====
+
+const gameModal = document.getElementById("gameModal");
+const openGameBtn = document.getElementById("openGameBtn");
+const gameClose = document.getElementById("gameClose");
+const gameBoard = document.getElementById("gameBoard");
+
+openGameBtn.addEventListener("click", () => {
+  gameModal.hidden = false;
+  startMemoryGame();
+});
+
+gameClose.addEventListener("click", () => {
+  gameModal.hidden = true;
+});
+
+function startMemoryGame() {
+  const numbers = [1,2,3,4,5,6,7,8];
+  let cards = [...numbers, ...numbers];
+  cards.sort(() => Math.random() - 0.5);
+
+  gameBoard.innerHTML = "";
+
+  let firstCard = null;
+  let lockBoard = false;
+  let matchedCount = 0;
+
+  cards.forEach(number => {
+    const card = document.createElement("div");
+    card.classList.add("card");
+    card.dataset.number = number;
+    gameBoard.appendChild(card);
+
+    card.addEventListener("click", () => {
+      if (lockBoard) return;
+      if (card.classList.contains("open") || card.classList.contains("matched")) return;
+
+      card.textContent = number;
+      card.classList.add("open");
+
+      if (!firstCard) {
+        firstCard = card;
+      } else {
+        if (firstCard.dataset.number === card.dataset.number) {
+          firstCard.classList.add("matched");
+          card.classList.add("matched");
+          matchedCount += 2;
+
+          if (matchedCount === cards.length) {
+            setTimeout(() => alert("🎉 クリア！"), 300);
+          }
+
+          firstCard = null;
+        } else {
+          lockBoard = true;
+          setTimeout(() => {
+            firstCard.textContent = "";
+            card.textContent = "";
+            firstCard.classList.remove("open");
+            card.classList.remove("open");
+            firstCard = null;
+            lockBoard = false;
+          }, 1000);
+        }
+      }
+    });
+  });
+}
