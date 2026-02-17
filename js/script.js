@@ -255,9 +255,12 @@ const gameModal = document.getElementById("gameModal");
 const openGameBtn = document.getElementById("openGameBtn");
 const gameClose = document.getElementById("gameClose");
 const gameBoard = document.getElementById("gameBoard");
+const iframe = document.getElementById("playerFrame");
+const audio = iframe.contentWindow.document.getElementById("bgmAudio");
 
 openGameBtn.addEventListener("click", () => {
   gameModal.style.display = "flex"; // displayで表示
+  if (audio) audio.play();
   setTimeout(() => gameModal.classList.add("show"), 10); // 10msでフェードイン開始
   startMemoryGame();
 });
@@ -322,3 +325,4 @@ function startMemoryGame() {
     });
   });
 }
+
