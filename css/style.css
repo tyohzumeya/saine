@@ -65,6 +65,9 @@ button:hover { background-color: #ddd; }
   align-items: center;
   justify-content: center;
   z-index: 10000; /* iframeより上に */
+
+  /* 重要: 背景はクリック無効化 */
+  pointer-events: none;
 }
 
 .modal-inner {
@@ -73,6 +76,9 @@ button:hover { background-color: #ddd; }
   border-radius: 10px;
   width: 500px;
   text-align: center;
+
+  /* コンテンツだけクリック可能に */
+  pointer-events: auto;
 }
 
 #gameBoard {
