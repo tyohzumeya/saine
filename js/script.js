@@ -258,11 +258,16 @@ const gameBoard = document.getElementById("gameBoard");
 
 openGameBtn.addEventListener("click", () => {
   gameModal.style.display = "flex"; // displayで表示
+  setTimeout(() => gameModal.classList.add("show"), 10); // 10msでフェードイン開始
   startMemoryGame();
 });
 
 gameClose.addEventListener("click", () => {
-  gameModal.style.display = "none"; // displayで非表示
+  // モーダルを閉じる時
+  gameModal.classList.remove("show"); // フェードアウト
+  gameModal.addEventListener("transitionend", () => {
+    gameModal.style.display = "none"; // displayで非表示
+  }, { once: true });
 });
 
 function startMemoryGame() {

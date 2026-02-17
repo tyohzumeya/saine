@@ -61,6 +61,8 @@ button:hover { background-color: #ddd; }
   display: none;       /* これで初期は非表示 */
   position: fixed;
   inset: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.6);
   align-items: center;
   justify-content: center;
