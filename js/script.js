@@ -260,6 +260,8 @@ const gameBoard = document.getElementById("gameBoard");
 
 openGameBtn.addEventListener("click", () => {
   gameModal.style.display = "flex"; // displayで表示
+  iframe = document.getElementById("playerFrame");
+  audio = iframe.contentWindow.document.getElementById("bgmAudio");
   if (audio) audio.play();
   setTimeout(() => gameModal.classList.add("show"), 10); // 10msでフェードイン開始
   startMemoryGame();
