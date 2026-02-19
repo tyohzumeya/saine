@@ -257,6 +257,15 @@ const gameModal = document.getElementById("gameModal");
 const openGameBtn = document.getElementById("openGameBtn");
 const gameClose = document.getElementById("gameClose");
 const gameBoard = document.getElementById("gameBoard");
+const difficultySelect = document.getElementById("difficultySelect");
+const restartBtn = document.getElementById("restartBtn");
+
+let currentLevel = 4;
+let audioData = [];
+let firstCard = null;
+let lockBoard = false;
+let matchedCount = 0;
+let currentAudio = null; // 同時再生防止
 
 openGameBtn.addEventListener("click", () => {
   gameModal.style.display = "flex"; // displayで表示
@@ -264,7 +273,13 @@ openGameBtn.addEventListener("click", () => {
   audio = iframe.contentWindow.document.getElementById("bgmAudio");
   if (audio) audio.play();
   setTimeout(() => gameModal.classList.add("show"), 10); // 10msでフェードイン開始
-  startMemoryGame();
+  loadMultipleJson([
+    { path: "/saine/audio-list.json", folder: "audio/" },
+    { path: "/saine/exaudio-list.json",   folder: "exaudio/" },
+    { path: "/saine/zooaudio-list.json",  folder: "zooaudio/" }
+  ]).then(() => {
+    startMemoryGame(4);
+  });
 });
 
 gameClose.addEventListener("click", () => {
@@ -275,56 +290,123 @@ gameClose.addEventListener("click", () => {
   }, { once: true });
 });
 
-function startMemoryGame() {
-  const numbers = [1,2,3,4,5,6,7,8];
-  let cards = [...numbers, ...numbers];
-  cards.sort(() => Math.random() - 0.5);
+// ===== JSON読み込み =====
+async function loadMultipleJson(jsonList) {
+  audioData = [];
 
+  for (const item of jsonList) {
+    const res = await fetch(item.path);
+    const data = await res.json();
+
+    // フォルダパスを付けて統合
+    const updated = data.map(d => ({
+      label: d.label,
+      file: item.folder + d.file
+    }));
+
+    audioData = audioData.concat(updated);
+  }
+
+  console.log("読み込んだ総データ数:", audioData.length);
+}
+
+// ===== 安定シャッフル =====
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+function startMemoryGame(size = 4) {
+  currentLevel = size;
   gameBoard.innerHTML = "";
+  gameBoard.style.display = "grid";
+  gameBoard.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
 
-  let firstCard = null;
-  let lockBoard = false;
-  let matchedCount = 0;
+  firstCard = null;
+  lockBoard = false;
+  matchedCount = 0;
 
-  cards.forEach(number => {
+  const totalCards = size * size;
+  const pairCount = totalCards / 2;
+
+  if (audioData.length < pairCount) {
+    alert(`音声データが足りません（必要: ${pairCount}）`);
+    return;
+  }
+
+  // ランダムに必要数だけ抽出
+  const selected = shuffle([...audioData]).slice(0, pairCount);
+
+  // ペア作成
+  const cards = shuffle([...selected, ...selected]);
+
+  cards.forEach(data => {
     const card = document.createElement("div");
     card.classList.add("card");
-    card.dataset.number = number;
+
+    card.dataset.label = "♪";
+    card.dataset.file = data.file;
+
+    card.addEventListener("click", () => handleCardClick(card));
+
     gameBoard.appendChild(card);
-
-    card.addEventListener("click", () => {
-      if (lockBoard) return;
-      if (card.classList.contains("open") || card.classList.contains("matched")) return;
-
-      card.textContent = number;
-      card.classList.add("open");
-
-      if (!firstCard) {
-        firstCard = card;
-      } else {
-        if (firstCard.dataset.number === card.dataset.number) {
-          firstCard.classList.add("matched");
-          card.classList.add("matched");
-          matchedCount += 2;
-
-          if (matchedCount === cards.length) {
-            setTimeout(() => alert("🎉 クリア！"), 300);
-          }
-
-          firstCard = null;
-        } else {
-          lockBoard = true;
-          setTimeout(() => {
-            firstCard.textContent = "";
-            card.textContent = "";
-            firstCard.classList.remove("open");
-            card.classList.remove("open");
-            firstCard = null;
-            lockBoard = false;
-          }, 1000);
-        }
-      }
-    });
   });
 }
+
+function handleCardClick(card) {
+  if (lockBoard) return;
+  if (card.classList.contains("open") || card.classList.contains("matched")) return;
+
+  card.textContent = "♪";
+  card.classList.add("open");
+
+  // 🎵 音声再生（連続再生防止）
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+
+  currentAudio = new Audio(card.dataset.file);
+  currentAudio.play();
+
+  if (!firstCard) {
+    firstCard = card;
+    return;
+  }
+
+  // 2枚目
+  if (firstCard.dataset.label === card.dataset.label) {
+    firstCard.classList.add("matched");
+    card.classList.add("matched");
+    matchedCount += 2;
+
+    if (matchedCount === currentLevel * currentLevel) {
+      setTimeout(() => alert("🎉 クリア！"), 300);
+    }
+
+    firstCard = null;
+  } else {
+    lockBoard = true;
+    setTimeout(() => {
+      firstCard.textContent = "";
+      card.textContent = "";
+      firstCard.classList.remove("open");
+      card.classList.remove("open");
+      firstCard = null;
+      lockBoard = false;
+    }, 1000);
+  }
+}
+
+// ===== イベント =====
+difficultySelect.addEventListener("change", e => {
+  startMemoryGame(parseInt(e.target.value));
+});
+
+restartBtn.addEventListener("click", () => {
+  startMemoryGame(currentLevel);
+});
 
