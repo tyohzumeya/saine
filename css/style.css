@@ -1,5 +1,11 @@
 body { font-family: sans-serif; padding: 20px; }
 h1 { margin-bottom: 20px; }
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 中央寄せ */
+  gap: 20px;
+}
 .audio-buttons { display: flex; flex-wrap: wrap; gap: 10px; margin-right: 200px;}
 button {
   padding: 8px 16px;
@@ -83,24 +89,35 @@ button:hover { background-color: #ddd; }
 }
 
 #gameBoard {
-  width: 440px;
+  width: 440px;              /* 今のモーダルに合わせる */
+  max-width: 95vw;           /* スマホ保険 */
   margin: 20px auto;
   display: grid;
-  grid-template-columns: repeat(4, 100px);
   gap: 10px;
+
+  /* ↓ 固定100pxを無効化 */
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .card {
-  width: 100px;
-  height: 100px;
+  /* 固定サイズを無効化 */
+  width: 100%;
+  height: auto;
+
+  aspect-ratio: 1 / 1;       /* 正方形維持 */
+
   background: #3498db;
   color: white;
-  font-size: 40px;
+
+  font-size: clamp(16px, 4vw, 40px);  /* 自動縮小 */
+
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   border-radius: 10px;
+
+  user-select: none;
 }
 
 .card.open { background: #2ecc71; }
