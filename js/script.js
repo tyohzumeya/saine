@@ -378,7 +378,7 @@ function handleCardClick(card) {
   }
 
   // 2枚目
-  if (firstCard.dataset.label === card.dataset.label) {
+  if (firstCard.dataset.file === card.dataset.file) {
     firstCard.classList.add("matched");
     card.classList.add("matched");
     matchedCount += 2;
