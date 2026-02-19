@@ -265,7 +265,7 @@ let audioData = [];
 let firstCard = null;
 let lockBoard = false;
 let matchedCount = 0;
-let currentAudio = null; // 同時再生防止
+let currentBdAudio = null; // 同時再生防止
 
 openGameBtn.addEventListener("click", () => {
   gameModal.style.display = "flex"; // displayで表示
@@ -364,13 +364,13 @@ function handleCardClick(card) {
   card.classList.add("open");
 
   // 🎵 音声再生（連続再生防止）
-  if (currentAudio) {
-    currentAudio.pause();
-    currentAudio.currentTime = 0;
+  if (currentBdAudio) {
+    currentBdAudio.pause();
+    currentBdAudio.currentTime = 0;
   }
 
-  currentAudio = new Audio(card.dataset.file);
-  currentAudio.play();
+  currentBdAudio = new Audio(card.dataset.file);
+  currentBdAudio.play();
 
   if (!firstCard) {
     firstCard = card;
