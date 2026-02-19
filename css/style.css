@@ -109,7 +109,7 @@ button:hover { background-color: #ddd; }
   background: #3498db;
   color: white;
 
-  font-size: 2em;      /* ← ここ変更 */
+  font-size: 1.9em;
 
   display: flex;
   align-items: center;
