@@ -271,7 +271,11 @@ openGameBtn.addEventListener("click", () => {
   gameModal.style.display = "flex"; // displayで表示
   iframe = document.getElementById("playerFrame");
   audio = iframe.contentWindow.document.getElementById("bgmAudio");
-  if (audio) audio.play();
+  if (audio) {
+    audio.loop = true;
+    audio.volume = 0.1;
+    audio.play();
+  }
   setTimeout(() => gameModal.classList.add("show"), 10); // 10msでフェードイン開始
   loadMultipleJson([
     { path: "/saine/audio-list.json", folder: "audio/" },
